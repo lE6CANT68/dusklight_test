@@ -28,6 +28,8 @@
 #include "dusk/ui/icon_provider.hpp"
 #include <algorithm>
 
+extern GXColor g_discoColor;
+
 namespace {
 
 // Reads the user HUD scale setting, clamped to a safe range.
@@ -1676,8 +1678,10 @@ void dMeter2Draw_c::drawKanteraScreen(u8 i_meterType) {
         mpMagicMeter->setBlackWhite(black, mpMagicMeter->getInitWhite());
         setAlphaMagicChange(true);
     } else if (i_meterType == 1) {
-        mpMagicMeter->setBlackWhite(JUtility::TColor(255, 255, 140, 255),
-                                    JUtility::TColor(230, 170, 0, 255));
+        mpMagicMeter->setBlackWhite(
+            JUtility::TColor(g_discoColor.r, g_discoColor.g, g_discoColor.b, 255),
+            JUtility::TColor(
+                g_discoColor.r, g_discoColor.g,g_discoColor.b, 255));
         setAlphaKanteraChange(true);
     } else if (i_meterType == 2) {
         f32 oxygen_percent = (f32)dComIfGp_getOxygen() / (f32)dComIfGp_getMaxOxygen();

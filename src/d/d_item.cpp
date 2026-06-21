@@ -804,6 +804,11 @@ void item_func_HOOKSHOT() {
 void item_func_HVY_BOOTS() {
     dComIfGs_setItem(SLOT_3, dItemNo_HVY_BOOTS_e);
 }
+void item_func_PEGASUS_BOOTS() {
+    dComIfGs_setItem(SLOT_3, dItemNo_PEGASUS_BOOTS_e);
+}
+
+
 
 void item_func_COPY_ROD() {
     dComIfGs_setItem(SLOT_8, dItemNo_COPY_ROD_e);

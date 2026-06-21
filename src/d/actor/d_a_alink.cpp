@@ -9844,6 +9844,12 @@ void daAlink_c::setNormalSpeedF(f32 i_speed, f32 i_deceleration) {
     if (checkWolfSwimDashAnime() || checkUnderMove0BckNoArc(ANM_SWIM_DASH) || getZoraSwim()) {
         max_speed = mMaxSpeed;
     }
+    if (mBootsType == 2) {
+        i_speed *= 2.5f;            // Augmente drastiquement la vitesse cible
+        max_speed *= 2.5f;          // Rehausse la limite maximale autorisée par le jeu
+        i_deceleration *= 0.5f;     // Réduit l'adhérence (Link glisse un peu en s'arrêtant)
+        onModeFlg(FLG1_DASH_MODE);  // Active la traînée de vent / effet de Blur derrière Link
+    }
 
     f32 temp_f30;
     if ((checkUpperReadyThrowAnime() && mLinkAcch.ChkGroundHit() && field_0x2f8c == 1)
@@ -14580,7 +14586,7 @@ int daAlink_c::changeItemTriggerKeepProc(u8 i_selItemIdx, int i_procType) {
  */
 int daAlink_c::checkNewItemChange(u8 i_selItemIdx) {
     u16 sel_item = dComIfGp_getSelectItem(i_selItemIdx);
-
+    
     if (checkSpinnerRide()
         || sel_item == dItemNo_BOMB_BAG_LV1_e
         || ((sel_item == dItemNo_KANTERA_e || checkOilBottleItem(sel_item)) && checkWaterInKandelaarOffset(mWaterY))
@@ -14598,7 +14604,7 @@ int daAlink_c::checkNewItemChange(u8 i_selItemIdx) {
         )
     {
         return ITEM_PROC_NONE;
-    } else if (sel_item == dItemNo_HVY_BOOTS_e
+    } else if (sel_item == dItemNo_HVY_BOOTS_e || sel_item == dItemNo_PEGASUS_BOOTS_e
                 || checkDungeonWarpItem(sel_item)
                 || checkTradeItem(sel_item)
                 || (checkBottleItem(sel_item) && sel_item != dItemNo_EMPTY_BOTTLE_e)
@@ -14616,12 +14622,13 @@ int daAlink_c::checkNewItemChange(u8 i_selItemIdx) {
             if (checkOilBottleItem(sel_item) && checkItemSetButton(dItemNo_KANTERA_e) != 2) {
                 return ITEM_PROC_KANDELAAR_POUR;
             }
-        } else if (sel_item == dItemNo_HVY_BOOTS_e) {
+        } else if (sel_item == dItemNo_HVY_BOOTS_e || sel_item == dItemNo_PEGASUS_BOOTS_e) {
             if (!checkBoardRide()) {
                 if ((mLinkAcch.ChkGroundHit() && !checkModeFlg(0x70C52)) ||
                     (checkMagneBootsOn() && cBgW_CheckBGround(mMagneBootsTopVec.y)) ||
                     mProcID == PROC_HANG_CLIMB)
                 {
+                    mSelectItemId = i_selItemIdx;
                     return ITEM_PROC_BOOTS_EQUIP;
                 }
                 return ITEM_PROC_SET_HVYBOOTS;
@@ -14930,7 +14937,7 @@ void daAlink_c::setLight() {
     cXyz spB8;
     f32 var_f27;
     if (field_0x33fc > 0.0f) {
-        GXColor sp30 = {(u8)light_m->mColorR, (u8)light_m->mColorG, (u8)light_m->mColorB, 0xFF};
+        GXColor sp30 = {g_discoColor.r, g_discoColor.g, g_discoColor.b, 0xFF};
 
         Vec sp5C = {0.0f, light_m->mYOffset, light_m->mZOffset};
 
@@ -15676,6 +15683,9 @@ int daAlink_c::procMove() {
                                  mpHIO->mBasic.m.mHeadMaxTurnDown);
         }
     }
+    //mNormalSpeed = 10.0f;
+    //speedF = 10.0f; CTN
+
 
     return 1;
 }
@@ -18229,6 +18239,14 @@ int daAlink_c::execute() {
                 if (!dComIfGp_checkPlayerStatus1(0, 0x10000) || !checkHookshotRoofLv7Boss()) {
                     setHeavyBoots(0);
                 }
+            } else {
+                dMeter2Info_onDirectUseItem(itemButton);
+            }
+        }
+        if (mBootsType == 2) {
+            int itemButton = checkItemSetButton(dItemNo_PEGASUS_BOOTS_e);
+            if (itemButton == 2) {
+                setPegasusBoots(0);
             } else {
                 dMeter2Info_onDirectUseItem(itemButton);
             }

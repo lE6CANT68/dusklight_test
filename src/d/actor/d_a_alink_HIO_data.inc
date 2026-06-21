@@ -30,7 +30,7 @@ const daAlinkHIO_basic_c1 daAlinkHIO_basic_c0::m = {
 	5000.0f,
 };
 
-const daAlinkHIO_move_c1 daAlinkHIO_move_c0::m = {
+const daAlinkHIO_move_c1 daAlinkHIO_move_c0::m = { //CTN68
 	{
         11,
 	    0.7f,
@@ -46,7 +46,7 @@ const daAlinkHIO_move_c1 daAlinkHIO_move_c0::m = {
     1.5f,
     0.4f,
     0.8f,
-    23.0f,
+    23.0f, //Vitesse max
     1.9f,
     2.2f,
     0.6f,
@@ -1555,7 +1555,7 @@ const daAlinkHIO_bow_c1 daAlinkHIO_bow_c0::m = {
     30,
     70,
     5.0f,
-    300.0f,
+    800.0f,
     5000.0f,
     800.0f,
     9000.0f,

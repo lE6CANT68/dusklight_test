@@ -45,7 +45,7 @@ namespace dusk {
         { dItemNo_ARROW_30_e, {"Arrows (30)"} },
         { dItemNo_ARROW_1_e, {"Arrows (1)"} },
         { dItemNo_PACHINKO_SHOT_e, {"Pumpkin Seeds"} },
-        { dItemNo_NOENTRY_19_e, {"Reserved"} },
+        { dItemNo_PEGASUS_BOOTS_e, {"Pegasus Boots"} },
         { dItemNo_NOENTRY_20_e, {"Reserved"} },
         { dItemNo_NOENTRY_21_e, {"Reserved"} },
         { dItemNo_WATER_BOMB_5_e, {"Water Bombs (5)"} },

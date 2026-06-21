@@ -2097,6 +2097,7 @@ public:
     bool commonMagneLineCheck(cXyz* i_start, cXyz* i_end);
     BOOL checkBootsMoveAnime(int);
     int setHeavyBoots(int);
+    int setPegasusBoots(int);  // Pegasus Boots
     s16 getMagneBootsLocalAngleY(s16, int);
     void setMagneBootsMtx(cBgS_PolyInfo*, int);
     int cancelMagneBootsOn();
@@ -4582,6 +4583,8 @@ public:
     bool mHsChainInterpCurrValid;
 
     bool mIsRollstab = false;
+
+    u8 mBootsType = 0;//pegasus boots test
 #endif
 };  // Size: 0x385C
 
@@ -6839,7 +6842,7 @@ public:
     static daAlinkHIO_boom_c0 const mBoomerang;
     static daAlinkHIO_bomb_c0 const mBomb;
     static daAlinkHIO_huLight_c0 const mLanternPL;
-    static daAlinkHIO_kandelaar_c0 const mLantern;
+    static daAlinkHIO_kandelaar_c0 const mLantern;  // const suppressed
     static daAlinkHIO_fmChain_c0 const mFmChain;
     static daAlinkHIO_magneBoots_c0 const mIronBoots;
     static daAlinkHIO_pickUp_c0 const mPickUp;

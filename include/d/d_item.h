@@ -74,6 +74,8 @@ void item_func_IRONBALL();
 void item_func_BOW();
 void item_func_HOOKSHOT();
 void item_func_HVY_BOOTS();
+void item_func_PEGASUS_BOOTS();//PEGESUS BOOTS
+
 void item_func_COPY_ROD();
 void item_func_W_HOOKSHOT();
 void item_func_KANTERA();

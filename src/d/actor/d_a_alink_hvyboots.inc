@@ -39,6 +39,23 @@ BOOL daAlink_c::checkBootsMoveAnime(int param_0) {
            checkDkCaught2Anime();
 }
 
+int daAlink_c::setPegasusBoots(int param_0) {
+    if (mBootsType == 2) {
+        mZ2Link.setLinkBootsType(0);
+        mBootsType = 0; 
+    }
+    else if (param_0) {
+        mZ2Link.setLinkBootsType(0);
+        mBootsType = 2;              
+        
+        if (checkModeFlg(0x40000)) { 
+            offNoResetFlg0(FLG0_SWIM_UP); 
+            mZ2Link.setInWater(true);
+        }
+    }
+    return 0;
+}
+
 int daAlink_c::setHeavyBoots(int param_0) {
     if (checkEquipHeavyBoots()) {
         offNoResetFlg0(FLG0_EQUIP_HVY_BOOTS);
@@ -275,7 +292,12 @@ int daAlink_c::procBootsEquip() {
     if (checkAnmEnd(frameCtrl_p)) {
         checkNextAction(0);
     } else if (frameCtrl_p->checkPass(10.0f)) {
-        setHeavyBoots(1);
+        u16 sel_item = dComIfGp_getSelectItem(mSelectItemId);
+        if (sel_item == dItemNo_PEGASUS_BOOTS_e) {
+            setPegasusBoots(1); 
+        } else {
+            setHeavyBoots(1);   
+        }
     } else if (frameCtrl_p->checkPass(16.0f)) {
         if (checkNoResetFlg0(FLG0_EQUIP_HVY_BOOTS)) {
             dComIfGp_getVibration().StartShock(3, 1, cXyz(0.0f, 1.0f, 0.0f));

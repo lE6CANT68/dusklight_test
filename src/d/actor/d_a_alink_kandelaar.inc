@@ -10,6 +10,8 @@
 #include "m_Do/m_Do_lib.h"
 #include "SSystem/SComponent/c_math.h"
 
+GXColor g_discoColor = {255, 0, 0, 255};
+
 static fopAc_ac_c* daAlink_searchTagKandelaar(fopAc_ac_c* i_actor, void* i_data) {
     UNUSED(i_data);
 
@@ -167,16 +169,43 @@ BOOL daAlink_c::checkKandelaarEquipAnime() const {
 void daAlink_c::preKandelaarDraw() {
     J3DMaterial* mat_p = mpKanteraGlowModel->getModelData()->getMaterialNodePointer(0);
 
+    static const u8 color_table[][3] = {
+        {255, 0, 0},     // Rouge
+        {255, 255, 0},   // Jaune
+        {0, 255, 0},     // Vert
+        {0, 255, 255},   // Cyan
+        {0, 0, 255},     // Bleu
+        {255, 0, 255}    // Magenta
+    };
+    static const int num_colors = sizeof(color_table) / sizeof(color_table[0]);
+
+    static int frame_counter = 0;
+    static int color_index = 0;
+
+    frame_counter++;
+    if (frame_counter >= 20) {
+        frame_counter = 0;
+        color_index = (color_index + 1) % num_colors;
+    }
+
+    int next_color_index = (color_index + 1) % num_colors;
+
+    f32 t = (f32)frame_counter / 20.0f;
+
+    g_discoColor.r = (u8)(color_table[color_index][0] + t * (color_table[next_color_index][0] - color_table[color_index][0]));
+    g_discoColor.g = (u8)(color_table[color_index][1] + t * (color_table[next_color_index][1] - color_table[color_index][1]));
+    g_discoColor.b = (u8)(color_table[color_index][2] + t * (color_table[next_color_index][2] - color_table[color_index][2]));
+
     J3DGXColorS10 color;
-    color.r = mpHIO->mItem.mLantern.m.mColorReg1R;
-    color.g = mpHIO->mItem.mLantern.m.mColorReg1G;
-    color.b = mpHIO->mItem.mLantern.m.mColorReg1B;
+    color.r = g_discoColor.r;
+    color.g = g_discoColor.g;
+    color.b = g_discoColor.b;
     color.a = 255;
     mat_p->setTevColor(1, &color);
 
-    color.r = mpHIO->mItem.mLantern.m.mColorReg2R;
-    color.g = mpHIO->mItem.mLantern.m.mColorReg2G;
-    color.b = mpHIO->mItem.mLantern.m.mColorReg2B;
+    color.r = 255 - g_discoColor.r;
+    color.g = 255 - g_discoColor.g;
+    color.b = 255 - g_discoColor.b;
     mat_p->setTevColor(2, &color);
 
     cXyz proj;

@@ -111,7 +111,7 @@ enum {
     /* 0x10 */ dItemNo_ARROW_30_e,
     /* 0x11 */ dItemNo_ARROW_1_e,
     /* 0x12 */ dItemNo_PACHINKO_SHOT_e,
-    /* 0x13 */ dItemNo_NOENTRY_19_e,
+    /* 0x13 */ dItemNo_PEGASUS_BOOTS_e, //PEGASUS BOOTS
     /* 0x14 */ dItemNo_NOENTRY_20_e,
     /* 0x15 */ dItemNo_NOENTRY_21_e,
     /* 0x16 */ dItemNo_WATER_BOMB_5_e,
