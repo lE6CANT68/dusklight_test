@@ -1030,6 +1030,7 @@ int daBoomerang_c::procWait() {
 }
 
 int daBoomerang_c::procMove() {
+
     daAlink_c* player = daAlink_getAlinkActorClass();
 
     if (field_0x957 != 0) {
@@ -1227,9 +1228,33 @@ int daBoomerang_c::procMove() {
 }
 
 int daBoomerang_c::execute() {
-    if (field_0x957 != 0) {
-        current.pos = field_0x9b8;
+    if (fopAcM_GetParam(this) == 0x99) {
+        shape_angle.y += 4000;
+        current.pos += speed;
+
+       
+        if (field_0x962 > 0) {
+            field_0x962--;
+        }
+        if (field_0x962 == 0) {
+            fopAcM_delete(this);
+            return 1;
+        }
+
+        setRoomInfo();
+
+        setMoveMatrix();
+
+        setEffect();
+
+        m_sound.framework(0, m_reverb);
+        m_sound.startLevelSound(Z2SE_BOOM_TORNADO, 0, -1);
+        dComIfG_Ccsp()->Set(&m_atCps);
+        dComIfG_Ccsp()->Set(&m_windAtCyl);
+
+        return 1;
     }
+    
 
     if (checkStateFlg0(FLG0_1) && fopAcM_wt_c::waterCheck(&current.pos)) {
         cXyz spC(current.pos.x, current.pos.y - 50.0f, current.pos.z);
@@ -1329,6 +1354,8 @@ int daBoomerang_c::execute() {
         daPy_boomerangMove_c::onEventKeepFlg();
     }
 
+    
+
     return 1;
 }
 
@@ -1423,6 +1450,10 @@ int daBoomerang_c::create() {
     fopAcM_RegisterCreateID(this, "Boomerang");
     fopAcM_ct(this, daBoomerang_c);
 
+    if (daAlink_getAlinkActorClass()->checkBoomerangAnime()) {
+        fopAcM_delete(this);
+    }
+
     if (!fopAcM_entrySolidHeap(this, daBoomerang_createHeap, 0xC0D0)) {
         return cPhs_ERROR_e;
     }
@@ -1480,6 +1511,28 @@ int daBoomerang_c::create() {
     m_lineChk.OnWaterGrp();
 
     m_shippuSize = 1.0f;
+
+  
+    u32 myParam = fopAcM_GetParam(this);
+
+    if (myParam == 0x99) {
+       
+       setThrow();
+        fopAcM_SetParam(this, 0x99); 
+        
+        speedF = 40.0f;
+
+       
+        speed.x = cM_ssin(current.angle.y) * speedF;
+        speed.y = 0.0f;  
+        speed.z = cM_scos(current.angle.y) * speedF;
+
+        
+        cXyz tornadoScale(0.5f, 0.5f, 0.5f);
+        model->setBaseScale(tornadoScale);
+        field_0x962 = 60;  
+   
+    }
     return cPhs_COMPLEATE_e;
 }
 

@@ -170,6 +170,10 @@ void daAlink_c::setBoomerangCatchAnime() {
 
 void daAlink_c::throwBoomerang() {
     daBoomerang_c* item = (daBoomerang_c*)mItemAcKeep.getActor();
+
+    cXyz spawnPos = item->current.pos;
+    s16 spawnAngleY = shape_angle.y + mBodyAngle.y;
+
     onNoResetFlg1(FLG1_UNK_2);
 
     //! @bug `item` pointer is being accessed without checking if NULL first
@@ -184,6 +188,8 @@ void daAlink_c::throwBoomerang() {
         }
 
         item->shape_angle.y = shape_angle.y;
+
+
         mThrowBoomerangAcKeep = mItemAcKeep;
         dComIfGp_setPlayerStatus0(0, 0x400000);
         daPy_boomerangMove_c::initDropAngleY();
@@ -230,10 +236,31 @@ void daAlink_c::throwBoomerang() {
 
         field_0x2060->initOldFrameMorf(0.0f, 0, 35);
     }
+    int numBoomerangs = 8; 
+    for (int i = 0; i < numBoomerangs; i++) {
+        s16 angleOffset = (0x10000 / numBoomerangs) * i;
+        csXyz spawnAngle = shape_angle;
+        spawnAngle.y = spawnAngleY + angleOffset;
+        
+        fopAcM_create(
+            fpcNm_BOOMERANG_e, 
+            fopAcM_GetID(this), 
+            0x99, 
+            &spawnPos, 
+            current.roomNo, 
+            &spawnAngle, 
+            NULL, -1, NULL
+        );
+    }
 }
 
 int daAlink_c::returnBoomerang(int param_0) {
     dComIfGp_clearPlayerStatus0(0, 0x400000);
+
+    daBoomerang_c* item = (daBoomerang_c*)mThrowBoomerangAcKeep.getActor();
+    if (item != NULL && fopAcM_GetParam(item) == 0x99) {
+        return 0; 
+    }
 
     if (mEquipItem == dItemNo_NONE_e
         && !checkMagneBootsOn()
@@ -259,6 +286,8 @@ int daAlink_c::returnBoomerang(int param_0) {
         dComIfGp_getVibration().StartShock(VIBMODE_S_POWER1, 1, cXyz(0.0f, 1.0f, 0.0f));
         return 1;
     }
+
+
 
     mThrowBoomerangAcKeep.clearData();
     return 0;
@@ -451,6 +480,7 @@ int daAlink_c::procBoomerangCatchInit() {
     if (!commonProcInitNotSameProc(PROC_BOOMERANG_CATCH)) {
         return 0;
     }
+
 
     setSingleAnimeParam(ANM_BOOMERANG_CATCH, &mpHIO->mItem.mBoomerang.m.mCatchAnm);
     setBoomerangCatchAnime();
